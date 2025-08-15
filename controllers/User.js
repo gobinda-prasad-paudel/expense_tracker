@@ -67,6 +67,7 @@ export const handleUserLogin = async (req, res) => {
     // Generate token (e.g., JWT)
     const token = createTokenForUser({
       _id: loginUser._id,
+      fullName: loginUser.fullName,
       email: loginUser.email,
       profileImageURL: loginUser.profilePicURL || null,
       role: loginUser.role || "user",

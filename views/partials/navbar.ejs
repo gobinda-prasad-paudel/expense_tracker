@@ -19,29 +19,30 @@
 
       <!-- Menu items -->
       <div id="menu" class="hidden md:flex items-center space-x-4">
-        <%= user?.name %>
-
-          <% if (user) { %>
-            <p>
-            <p class="animate__animated animate__swing animate__infinite text-2xl font-bold text-indigo-600">
-              Welcome
-            </p> &nbsp;
-            <%= locals.fullName %>
-              </p>
 
 
-              <a href="/user/dashboard"
-                class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+
+        <% if (locals?.fullName) { %>
+          <p>
+          <p class="animate__animated animate__swing animate__infinite text-2xl font-bold text-indigo-600">
+            Welcome
+          </p> &nbsp;
+          <%= locals.fullName %>
+            </p>
 
 
-              <% } else { %>
+            <a href="/user/dashboard"
+              class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
 
-                <a href="/login"
-                  class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Login</a>
-                <a href="/signup"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">Sign
-                  Up</a>
-                <% } %>
+
+            <% } else { %>
+
+              <a href="/login"
+                class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Login</a>
+              <a href="/signup"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">Sign
+                Up</a>
+              <% } %>
       </div>
     </div>
 

@@ -91,7 +91,9 @@ app.get("/signup", (req, res) => {
 });
 
 app.get("/termsandcondition", (req, res) => {
-  res.render("termsandcondition");
+  const fullName = req.user?.fullName || null;
+  // console.log("User", req.user);
+  res.render("termsandcondition", { fullName });
 });
 
 app.get("/logout", (req, res) => {
