@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import useragent from "useragent";
 import geoip from "geoip-lite";
 // ----------------- Helper Functions -----------------
