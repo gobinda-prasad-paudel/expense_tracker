@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Income - रु‎ Expense Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .sidebar-active {
+      background-color: #e0e7ff;
+      color: #3730a3;
+    }
+
+    /* Always include .open class behavior */
+    #sidebar {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #sidebar.open {
+      transform: translateX(0);
+    }
+
+    /* Custom styles for sidebar transition on mobile/tablet */
+    @media (max-width: 767px) {
+      #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+      }
+
+      #sidebar-overlay {
+        transition: opacity 0.3s ease-in-out;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex h-screen overflow-hidden">
+
+
+    <!-- Sidebar -->
+    <%- include("./partials/sidebar") %>
+
+
+      <!-- Main Content -->
+      <div id="main-content-wrapper" class="flex-1 overflow-auto ">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4 flex items-center">
+          <button id="sidebar-toggle" class="p-2 rounded-md hover:bg-gray-100 mr-4 md:hidden">
+            <i class="fas fa-bars text-gray-700"></i>
+          </button>
+          <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Add Income</h1>
+          <div class="flex-grow"></div>
+          <a href="/user/dashboard" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+          </a>
+        </header>
+
+        <!-- Form Content -->
+        <main class="p-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow p-8">
+              <div class="flex items-center mb-6">
+                <div class="p-3 bg-green-100 rounded-lg mr-4">
+                  <i class="fas fa-plus-circle text-green-600 text-xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-gray-900">Add New Income</h2>
+                  <p class="text-gray-600">Record a new income transaction</p>
+                </div>
+              </div>
+
+              <form class="space-y-6" action="/user/add-income" method="POST">
+                <div>
+                  <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <input type="text" id="description" name="description" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter income description">
+                </div>
+
+                <div>
+                  <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
+                    Amount (रु‎)
+                  </label>
+                  <input type="number" id="amount" name="amount" step="0.01" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="0.00">
+                </div>
+
+                <div>
+                  <label for="source" class="block text-sm font-medium text-gray-700 mb-2">
+                    Income Source
+                  </label>
+                  <select id="source" name="source" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select income source</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Business">Business</option>
+                    <option value="Investment">Investment</option>
+                    <option value="Rental">Rental</option>
+                    <option value="Gift">Gift</option>
+                    <option value="Bonus">Bonus</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="source" class="block text-sm font-medium text-gray-700 mb-2">
+                    Recieved Via
+                  </label>
+                  <select id="recivedThrough" name="recivedThrough" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select recieved source</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Cheque">Cheque</option>
+                    <option value="Mobile Banking">Mobile Banking</option>
+                    <option value="Digital Wallet">Digital Wallet</option>
+                    <option value="E-sewa">E-sewa</option>
+                    <option value="Khalti-Pay">Khalti-Pay</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+                    Date
+                  </label>
+                  <input type="date" id="date" name="date" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div class="flex space-x-4">
+                  <button type="submit"
+                    class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-medium">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add Income
+                  </button>
+                  <a href="dashboard.html"
+                    class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-md font-medium text-center">
+                    Cancel
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const mainContentWrapper = document.getElementById('main-content-wrapper');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      sidebar.classList.toggle('-translate-x-full');
+      sidebarOverlay.classList.toggle('hidden');
+      sidebarOverlay.classList.toggle('opacity-0');
+      sidebarOverlay.classList.toggle('opacity-50');
+      document.body.classList.toggle('overflow-hidden');
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+
+    const navLinks = document.querySelectorAll('#sidebar nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 768) {
+          toggleSidebar();
+        }
+      });
+    });
+
+    function handleResize() {
+      if (window.innerWidth >= 768) {
+        sidebar.classList.remove('fixed', '-translate-x-full', 'open');
+        sidebar.classList.add('relative', 'translate-x-0');
+        sidebarOverlay.classList.add('hidden', 'opacity-0');
+        document.body.classList.remove('overflow-hidden');
+      } else {
+        sidebar.classList.add('fixed', '-translate-x-full');
+        sidebar.classList.remove('relative', 'translate-x-0');
+        if (!sidebar.classList.contains('open')) {
+          sidebarOverlay.classList.add('hidden', 'opacity-0');
+        }
+      }
+    }
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Set today's date as default
+    document.getElementById('date').valueAsDate = new Date();
+  </script>
+  <%- include("./partials/sidebar_js") %>
+</body>
+
+</html>

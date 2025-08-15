@@ -1,0 +1,41 @@
+{
+  "name": "expense_tracker",
+  "version": "1.0.0",
+  "description": "An expense tracker for single users",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "Expense",
+    "Tracker"
+  ],
+  "type": "module",
+  "author": "Gobinda",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bikram-sambat-js": "^1.0.2",
+    "chart.js": "^4.5.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "geoip-lite": "^1.4.10",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "multer": "^2.0.2",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^24.16.0",
+    "useragent": "^2.3.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

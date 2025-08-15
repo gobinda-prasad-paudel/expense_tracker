@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Income - रु‎ Expense Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .sidebar-active {
+      background-color: #e0e7ff;
+      color: #3730a3;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <%- include("./partials/sidebar") %>
+
+      <!-- Main Content -->
+      <div id="main-content-wrapper" class="flex-1 overflow-auto ">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4 flex items-center">
+          <button id="sidebar-toggle" class="p-2 rounded-md hover:bg-gray-100 mr-4 md:hidden">
+            <i class="fas fa-bars text-gray-700"></i>
+          </button>
+          <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Income</h1>
+          <div class="flex-grow"></div>
+          <a href="/user/dashboard" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+          </a>
+        </header>
+
+        <!-- Income List Content -->
+        <main class="p-6">
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow p-8">
+              <div class="flex items-center mb-6">
+                <div class="p-3 bg-green-100 rounded-lg mr-4">
+                  <i class="fas fa-coins text-green-600 text-xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-gray-900">Manage Your Income</h2>
+                  <p class="text-gray-600">View and manage all your income transactions</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <% if (incomeDoneByUser.length===0) { %>
+                  <p class="text-gray-500 text-center py-8">No income found. Add your first income!</p>
+
+
+                  <% } %>
+
+                    <% incomeDoneByUser.forEach(income=> { %>
+
+                      <!-- Incomes -->
+                      <div class="flex items-center justify-between p-4 border rounded-lg bg-green-50">
+                        <div class="flex-1">
+                          <h3 class="font-medium">
+                            <%= income.description %>
+                          </h3>
+                          <p class="text-sm text-gray-500">
+                            <%= income.date %>
+                              <!-- Salary • 1 Kartik 2081 (14 October 2024) -->
+                          </p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                          <span class="font-bold text-lg text-green-600">रु‎ <%= income.amount %></span>
+                          <div class="flex space-x-2">
+                            <a href="/user/income/edit/<%= income._id %>"
+                              class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-md text-sm">
+                              <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="/user/income/delete/<%= income._id %>"
+                              class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-md text-sm">
+                              <i class="fas fa-trash-alt"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+                      <% }) %>
+                        <!-- Income Item 1 -->
+                        <!-- <div class="flex items-center justify-between p-4 border rounded-lg bg-green-50">
+                  <div class="flex-1">
+                    <h3 class="font-medium">Salary Payment</h3>
+                    <p class="text-sm text-gray-500">
+                      Salary • 1 Kartik 2081 (14 October 2024)
+                    </p>
+                  </div>
+                  <div class="flex items-center space-x-4">
+                    <span class="font-bold text-lg text-green-600">रु‎ 45,000.00</span>
+                    <div class="flex space-x-2">
+                      <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-md text-sm">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-md text-sm">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div> -->
+
+                        <!-- Income Item 2 -->
+                        <!-- <div class="flex items-center justify-between p-4 border rounded-lg bg-green-50">
+                  <div class="flex-1">
+                    <h3 class="font-medium">Freelance Project</h3>
+                    <p class="text-sm text-gray-500">
+                      Freelance • 5 Kartik 2081 (18 October 2024)
+                    </p>
+                  </div>
+                  <div class="flex items-center space-x-4">
+                    <span class="font-bold text-lg text-green-600">रु‎ 15,000.00</span>
+                    <div class="flex space-x-2">
+                      <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-md text-sm">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-md text-sm">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div> -->
+
+                        <!-- No income message (hidden by default, for demonstration) -->
+                        <!-- <p class="text-gray-500 text-center py-8">No income found. Add your first income!</p> -->
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+  </div>
+  <%- include("./partials/sidebar_js") %>
+</body>
+
+</html>

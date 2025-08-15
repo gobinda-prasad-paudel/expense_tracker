@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Expense - रु‎ Expense Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .sidebar-active {
+      background-color: #e0e7ff;
+      color: #3730a3;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <%- include("./partials/sidebar") %>
+
+      <!-- Main Content -->
+      <div id="main-content-wrapper" class="flex-1 overflow-auto ">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4 flex items-center">
+          <button id="sidebar-toggle" class="p-2 rounded-md hover:bg-gray-100 mr-4 md:hidden">
+            <i class="fas fa-bars text-gray-700"></i>
+          </button>
+          <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Add Expense</h1>
+          <div class="flex-grow"></div>
+          <a href="/user/dashboard" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+          </a>
+        </header>
+
+        <!-- Form Content -->
+        <main class="p-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow p-8">
+              <div class="flex items-center mb-6">
+                <div class="p-3 bg-red-100 rounded-lg mr-4">
+                  <i class="fas fa-minus-circle text-red-600 text-xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-gray-900">Add New Expense</h2>
+                  <p class="text-gray-600">Record a new expense transaction</p>
+                </div>
+              </div>
+
+              <form class="space-y-6" action="/user/add-expense" method="POST">
+                <div>
+                  <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <input type="text" id="description" name="description" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter expense description">
+                </div>
+
+                <div>
+                  <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
+                    Original Amount (रु‎)
+                  </label>
+                  <input type="number" id="amount" name="amount" step="0.01" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="0.00" oninput="calculateDiscount()">
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex items-center">
+
+
+                    <!-- Only overrides the value when checked -->
+                    <input type="checkbox" id="hasDiscount" name="hasDiscount" value="true"
+                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      onchange="toggleDiscount()">
+                    <label for="hasDiscount" class="ml-2 block text-sm text-gray-700">
+                      Apply Discount
+                    </label>
+
+                  </div>
+
+                  <div id="discountSection" class="hidden grid grid-cols-2 gap-4">
+                    <div>
+                      <label for="discount" class="block text-sm font-medium text-gray-700 mb-2">
+                        Discount Value
+                      </label>
+                      <input type="number" id="discount" name="discount" step="0.01"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="0" oninput="calculateDiscount()">
+                    </div>
+                    <div>
+                      <label for="discountType" class="block text-sm font-medium text-gray-700 mb-2">
+                        Discount Type
+                      </label>
+                      <select id="discountType" name="discountType"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        onchange="calculateDiscount()">
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="fixed">Fixed Amount (रु‎)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div id="discountSummary" class="hidden p-3 bg-gray-50 rounded-lg">
+                    <p class="text-sm">
+                      <span class="font-medium">Original Amount:</span>
+                      <span id="originalAmount">रु‎ 0.00</span>
+                    </p>
+                    <p class="text-sm">
+                      <span class="font-medium">Discount:</span>
+                      <span id="discountDisplay">0</span>
+                    </p>
+                    <p class="text-sm font-bold text-green-600">
+                      <span class="font-medium">Final Amount:</span>
+                      <span id="finalAmount">रु‎ 0.00</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                    Category
+                  </label>
+                  <select id="category" name="category" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select a category</option>
+                    <option value="Food & Dining">Food & Dining</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Bills & Utilities">Bills & Utilities</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Education">Education</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+                    Date
+                  </label>
+                  <input type="date" id="date" name="date" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div class="flex space-x-4">
+                  <button type="submit"
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md font-medium">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add Expense
+                  </button>
+                  <a href="/dashboard"
+                    class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-md font-medium text-center">
+                    Cancel
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
+  </div>
+
+  <script>
+    // Set today's date as default
+    document.getElementById('date').valueAsDate = new Date();
+
+    function toggleDiscount() {
+      const checkbox = document.getElementById('hasDiscount');
+      const section = document.getElementById('discountSection');
+      const summary = document.getElementById('discountSummary');
+
+      if (checkbox.checked) {
+        section.classList.remove('hidden');
+        calculateDiscount();
+      } else {
+        section.classList.add('hidden');
+        summary.classList.add('hidden');
+      }
+    }
+
+    function calculateDiscount() {
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const discount = parseFloat(document.getElementById('discount').value) || 0;
+      const discountType = document.getElementById('discountType').value;
+      const hasDiscount = document.getElementById('hasDiscount').checked;
+
+      if (hasDiscount && amount > 0 && discount > 0) {
+        let finalAmount;
+        let discountDisplay;
+
+        if (discountType === 'percentage') {
+          finalAmount = amount - (amount * discount / 100);
+          discountDisplay = discount + '%';
+        } else {
+          finalAmount = amount - discount;
+          discountDisplay = 'रु‎ ' + discount;
+        }
+
+        document.getElementById('originalAmount').textContent = 'रु‎ ' + amount.toFixed(2);
+        document.getElementById('discountDisplay').textContent = discountDisplay;
+        document.getElementById('finalAmount').textContent = 'रु‎ ' + finalAmount.toFixed(2);
+        document.getElementById('discountSummary').classList.remove('hidden');
+      } else {
+        document.getElementById('discountSummary').classList.add('hidden');
+      }
+    }
+  </script>
+  <%- include("./partials/sidebar_js") %>
+</body>
+
+</html>

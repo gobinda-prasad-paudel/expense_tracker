@@ -1,0 +1,67 @@
+<!-- Navbar -->
+<nav class="bg-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <h1 class="text-2xl font-bold text-indigo-600">रु‎ Expense Tracker</h1>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="md:hidden">
+        <button id="menu-toggle" class="text-gray-700 hover:text-indigo-600 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Menu items -->
+      <div id="menu" class="hidden md:flex items-center space-x-4">
+        <%= user?.name %>
+
+          <% if (user) { %>
+            <p>
+            <p class="animate__animated animate__swing animate__infinite text-2xl font-bold text-indigo-600">
+              Welcome
+            </p> &nbsp;
+            <%= locals.fullName %>
+              </p>
+
+
+              <a href="/user/dashboard"
+                class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+
+
+              <% } else { %>
+
+                <a href="/login"
+                  class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Login</a>
+                <a href="/signup"
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">Sign
+                  Up</a>
+                <% } %>
+      </div>
+    </div>
+
+    <!-- Mobile menu dropdown -->
+    <div id="mobile-menu" class="md:hidden hidden  p-4">
+      <a href="/user/dashboard"
+        class="block text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-md text-sm font-medium">Dashboard</a>
+      <a href="/login"
+        class="block text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-md text-sm font-medium">Login</a>
+      <a href="/signup"
+        class="block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuToggle.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("./partials/header") %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      .sidebar-active {
+        background-color: #e0e7ff;
+        color: #3730a3;
+      }
+    </style>
+    <title>Dashboard - रु‎ Expense Tracker</title>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <%- include("./partials/sidebar") %>
+
+      <!-- Main Content -->
+      <div id="main-content-wrapper" class="flex-1 overflow-auto">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4 flex items-center">
+          <button id="sidebar-toggle" class="p-2 rounded-md hover:bg-gray-100 mr-4 md:hidden">
+            <i class="fas fa-bars text-gray-700"></i>
+          </button>
+          <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Dashboard</h1>
+          <div class="flex-grow"></div>
+          <a href="/user/report" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+            <i class="fas fa-arrow-left mr-2"></i>Go To Report
+          </a>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+          <!-- Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center">
+                <div class="p-2 bg-blue-100 rounded-lg">
+                  <i class="fas fa-wallet text-blue-600"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Balance</p>
+                  <p class="text-2xl font-bold text-blue-600">रु‎ <%= typeof totalBalanceAvailable==="number" ?
+                      totalBalanceAvailable : "Something went wrong" %>
+
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center">
+                <div class="p-2 bg-green-100 rounded-lg">
+                  <i class="fas fa-arrow-up text-green-600"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Income</p>
+                  <p class="text-xl font-bold text-green-600">रु‎ <%= totalIncome %>
+                  </p>
+                  <p class="text-xs text-gray-500">This month: रु‎ 25,000</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center">
+                <div class="p-2 bg-red-100 rounded-lg">
+                  <i class="fas fa-arrow-down text-red-600"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Total Expenses</p>
+                  <p class="text-2xl font-bold text-red-600">रु‎ <%= totalExpense %>
+                  </p>
+                  <p class="text-xs text-gray-500">This month: रु‎ 12,500</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center">
+                <div class="p-2 bg-yellow-100 rounded-lg">
+                  <i class="fas fa-tags text-yellow-600"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Discount Saved</p>
+                  <p class="text-2xl font-bold text-yellow-600">रु‎ <%= totalDiscounts %>
+                  </p>
+                  <p class="text-xs text-gray-500">Total savings</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex items-center">
+                <div class="p-2 bg-purple-100 rounded-lg">
+                  <i class="fas fa-receipt text-purple-600"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-600">Transactions</p>
+                  <p class="text-2xl font-bold text-gray-900">
+                    <%= totalTransactions %>
+                  </p>
+                  <p class="text-xs text-gray-500">
+                    <%= incomeTransactions %> income , <%= expenseTransactions %> expenses,
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Expense Categories Chart -->
+            <!-- <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Expenses by Category</h3>
+              <div class="h-64">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div> -->
+
+            <!-- Income vs Expenses Chart -->
+            <!-- <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Income vs Expenses</h3>
+              <div class="h-64">
+                <canvas id="incomeExpenseChart"></canvas>
+              </div>
+            </div> -->
+          </div>
+
+          <!-- Monthly Trend Chart -->
+          <!-- <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Financial Trend</h3>
+            <div class="h-64">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div> -->
+
+          <!-- Recent Transactions -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Recent Transactions</h3>
+            </div>
+            <div class="p-6">
+              <% if (formattedTransactions.length==0) { %>
+                <p class="text-sm text-gray-500">
+                  No recent transactions
+                </p>
+
+
+                <% } else { %>
+
+                  <div class="space-y-4">
+                    <% formattedTransactions.forEach(transaction=> { %>
+
+
+                      <div class="flex items-center justify-between p-4 border rounded-lg 
+                    <%= transaction.transactionType === 
+                    
+                    
+                    
+                `income` ? `bg-green-50` : " bg-red-50" %>
+                        ">
+                        <div class="flex-1">
+                          <h4 class="font-medium">
+                            <%= transaction.description %>
+                          </h4>
+                          <p class="text-sm text-gray-500">
+                            <%= transaction.category %> • <%= transaction.date %>
+                          </p>
+                          <p class="text-xs text-blue-600">Original: रु‎ 2,500
+                            <% if (transaction.transactionType==="expense" && transaction.isDiscountAvailable) { %>
+
+                              | Discount: <% if (transaction.discount.type==="fixed" ) { %>
+                                रु‎ <%= transaction.discountAmount %>
+
+                                  <% } else{ %>
+                                    <%= transaction.discountAmount %> %
+
+
+                                      <% } %>
+
+
+
+
+
+
+                          </p>
+                          <% } %>
+                        </div>
+                        <% if (transaction.transactionType==="income" ) { %>
+
+
+                          <div class="text-right">
+                            <span class="font-bold text-lg text-green-600">रु‎ <%= transaction.amount %>
+                            </span>
+                          </div>
+
+                          <% } else {%>
+
+                            <div class="text-right">
+                              <span class="font-bold text-lg text-red-600">रु‎ <%= transaction.totalAmountPaid %>
+                              </span>
+                              <% if (transaction.isDiscountAvailable) { %>
+
+
+                                <p class="text-xs text-gray-500 line-through">रु‎
+
+
+                                  <%= transaction.discountAmount %>
+
+
+                                </p>
+                                <% } %>
+
+
+                            </div>
+
+                            <% } %>
+                      </div>
+
+                      <% }) %>
+                        <!-- <div class="flex items-center justify-between p-4 border rounded-lg bg-red-50">
+                        <div class="flex-1">
+                          <h4 class="font-medium">Grocery Shopping</h4>
+                          <p class="text-sm text-gray-500">Food & Dining • 15 Kartik 2081 (28 October 2024)</p>
+                          <p class="text-xs text-blue-600">Original: रु‎ 2,500 | Discount: 10%</p>
+                        </div>
+                        <div class="text-right">
+                          <span class="font-bold text-lg text-red-600">रु‎ 2,250</span>
+                          <p class="text-xs text-gray-500 line-through">रु‎ 2,500</p>
+                        </div>
+                      </div>
+  
+                      <div class="flex items-center justify-between p-4 border rounded-lg bg-green-50">
+                        <div class="flex-1">
+                          <h4 class="font-medium">Salary Payment</h4>
+                          <p class="text-sm text-gray-500">Salary • 1 Kartik 2081 (14 October 2024)</p>
+                        </div>
+                        <div>
+                          <span class="font-bold text-lg text-green-600">रु‎ 45,000</span>
+                        </div>
+                      </div>
+  
+                      <div class="flex items-center justify-between p-4 border rounded-lg bg-red-50">
+                        <div class="flex-1">
+                          <h4 class="font-medium">Internet Bill</h4>
+                          <p class="text-sm text-gray-500">Bills & Utilities • 10 Kartik 2081 (23 October 2024)</p>
+                        </div>
+                        <div>
+                          <span class="font-bold text-lg text-red-600">रु‎ 1,200</span>
+                        </div>
+                      </div> -->
+                  </div>
+
+                  <% } %>
+
+            </div>
+          </div>
+        </main>
+      </div>
+  </div>
+
+
+  <%- include("./partials/sidebar_js.ejs") %>
+
+    <!-- <script>
+      // Category Chart
+      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+      new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Food & Dining', 'Transportation', 'Shopping', 'Bills & Utilities', 'Entertainment'],
+          datasets: [{
+            data: [12500, 8500, 6200, 4800, 3200],
+            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Income vs Expense Chart
+      const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+      new Chart(incomeExpenseCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Income',
+            data: [45000, 42000, 48000, 45000, 50000, 47000],
+            backgroundColor: '#10B981'
+          }, {
+            label: 'Expenses',
+            data: [35000, 38000, 32000, 40000, 36000, 39000],
+            backgroundColor: '#EF4444'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Trend Chart
+      const trendCtx = document.getElementById('trendChart').getContext('2d');
+      new Chart(trendCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Income',
+            data: [45000, 42000, 48000, 45000, 50000, 47000],
+            borderColor: '#10B981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4
+          }, {
+            label: 'Expenses',
+            data: [35000, 38000, 32000, 40000, 36000, 39000],
+            borderColor: '#EF4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script> -->
+
+    <script>
+      const expensesData = '<%= JSON.stringify(expenses) %>';
+      const incomesData = '<%= JSON.stringify(incomes) %>';
+
+      console.log(`${JSON.stringify(expenses)}`)
+
+
+      // ===== EXPENSES BY CATEGORY =====
+      const categoryTotals = {};
+      expensesData.forEach(exp => {
+        const category = exp.category || "Uncategorized";
+        const amount = exp.totalAmountPaid || 0;
+        categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+      });
+
+      const categoryLabels = Object.keys(categoryTotals);
+      const categoryValues = Object.values(categoryTotals);
+
+      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+      if (categoryLabels.length > 0) {
+        new Chart(categoryCtx, {
+          type: 'doughnut',
+          data: {
+            labels: categoryLabels,
+            datasets: [{
+              data: categoryValues,
+              backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      } else {
+        categoryCtx.canvas.parentNode.innerHTML = "<p class='text-gray-500 text-center'>No data to compute</p>";
+      }
+
+      // ===== INCOME VS EXPENSE =====
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      const monthlyIncome = {};
+      incomesData.forEach(inc => {
+        const month = monthNames[new Date(inc.date).getMonth()];
+        monthlyIncome[month] = (monthlyIncome[month] || 0) + (inc.amount || 0);
+      });
+
+      const monthlyExpense = {};
+      expensesData.forEach(exp => {
+        const month = monthNames[new Date(exp.date).getMonth()];
+        monthlyExpense[month] = (monthlyExpense[month] || 0) + (exp.totalAmountPaid || 0);
+      });
+
+      const allMonths = [...new Set([...Object.keys(monthlyIncome), ...Object.keys(monthlyExpense)])].sort(
+        (a, b) => monthNames.indexOf(a) - monthNames.indexOf(b)
+      );
+
+      const incomeValues = allMonths.map(m => monthlyIncome[m] || 0);
+      const expenseValues = allMonths.map(m => monthlyExpense[m] || 0);
+
+      const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+      if (allMonths.length > 0) {
+        new Chart(incomeExpenseCtx, {
+          type: 'bar',
+          data: {
+            labels: allMonths,
+            datasets: [
+              { label: 'Income', data: incomeValues, backgroundColor: '#10B981' },
+              { label: 'Expenses', data: expenseValues, backgroundColor: '#EF4444' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      } else {
+        incomeExpenseCtx.canvas.parentNode.innerHTML = "<p class='text-gray-500 text-center'>No data to compute</p>";
+      }
+    </script>
+
+    <%- include("./partials/sidebar_js") %>
+</body>
+
+</html>

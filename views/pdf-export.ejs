@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Export - रु‎ Expense Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    .sidebar-active {
+      background-color: #e0e7ff;
+      color: #3730a3;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <%- include("./partials/sidebar") %>
+
+      <!-- Main Content -->
+      <div id="main-content-wrapper" class="flex-1 overflow-auto ">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-6 py-4 flex items-center">
+          <button id="sidebar-toggle" class="p-2 rounded-md hover:bg-gray-100 mr-4 md:hidden">
+            <i class="fas fa-bars text-gray-700"></i>
+          </button>
+          <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">PDF Export</h1>
+
+          <div class="flex-grow"></div>
+          <a href="/user/dashboard" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+          </a>
+        </header>
+
+        <!-- Export Content -->
+        <main class="p-6">
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow p-8">
+              <div id="message"></div>
+              <div class="flex items-center mb-6">
+                <div class="p-3 bg-purple-100 rounded-lg mr-4">
+                  <i class="fas fa-file-pdf text-purple-600 text-xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-gray-900">PDF Export</h2>
+                  <p class="text-gray-600">Generate detailed expense reports with Nepali dates (B.S.) and charts</p>
+                </div>
+              </div>
+
+              <form id="pdfForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label for="startDate" class="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date (B.S.)
+                    </label>
+                    <input type="date" id="startDate" name="startDate" required
+                      class="w-full px-3 py-2 border rounded-md">
+                  </div>
+
+                  <div>
+                    <label for="endDate" class="block text-sm font-medium text-gray-700 mb-2">
+                      End Date (B.S.)
+                    </label>
+                    <input type="date" id="endDate" name="endDate" required class="w-full px-3 py-2 border rounded-md">
+                  </div>
+                </div>
+
+                <div>
+                  <label for="tableType" class="block text-sm font-medium text-gray-700 mb-2">Select Table Type (in
+                    pdf)</label>
+                  <select id="tableType" name="tableType" required class="w-full px-3 py-2 border rounded-md">
+                    <option value="">Select option</option>
+                    <option value="separate2">Separate 2 tables</option>
+                    <option value="combined1">Combined 1 table</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-6 rounded-md">
+                  <i class="fas fa-download mr-2"></i>Generate PDF Report
+                </button>
+              </form>
+
+
+
+              <div class="mt-8  bg-gray-50 rounded-lg">
+                <a class="w-full mt-8 md:w-auto bg-purple-600 hover:bg-purple-700 text-white py-2 px-6 rounded-md
+                font-medium" href="/user/statements" target="_blank"> <i class="fas fa-arrow-left mr-2"></i>Go To
+                  Statements</a>
+              </div>
+
+
+
+
+              <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+                <h4 class="font-medium text-gray-900 mb-3">PDF Report Features:</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <ul class="text-sm space-y-2 text-gray-600">
+                    <li class="flex items-center">
+                      <i class="fas fa-check text-green-500 mr-2"></i>
+                      Dates shown in both A.D. and B.S. formats
+                    </li>
+                    <li class="flex items-center">
+                      <i class="fas fa-check text-green-500 mr-2"></i>
+                      Expenses grouped by category with color coding
+                    </li>
+                    <li class="flex items-center">
+                      <i class="fas fa-check text-green-500 mr-2"></i>
+                      Income and expense summary
+                    </li>
+                  </ul>
+                  <ul class="text-sm space-y-2 text-gray-600">
+                    <li class="flex items-center">
+                      <i class="fas fa-check text-green-500 mr-2"></i>
+                      Category-wise expense distribution
+                    </li>
+                    <li class="flex items-center">
+                      <i class="fas fa-check text-green-500 mr-2"></i>
+                      Page numbers and generation date
+                    </li>
+                    <li class="flex items-center">
+                      <i class="fas fa-check text-green-500 mr-2"></i>
+                      All amounts in Nepali Rupees (रु‎)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Sample Preview -->
+              <!-- <div class="mt-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Sample Data Preview</h3>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date
+                          (B.S.)</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date
+                          (A.D.)</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Category</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Amount
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr class="bg-red-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15 Kartik 2081</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">28 October 2024</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Grocery Shopping</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Food & Dining</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">रु‎ 2,250</td>
+                      </tr>
+                      <tr class="bg-green-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 Kartik 2081</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">14 October 2024</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Salary Payment</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Salary</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">रु‎ 45,000</td>
+                      </tr>
+                      <tr class="bg-red-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10 Kartik 2081</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">23 October 2024</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Internet Bill</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bills & Utilities</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">रु‎ 1,200</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </main>
+      </div>
+  </div>
+
+  <script>
+    document.getElementById('pdfForm').addEventListener('submit', async function (e) {
+      e.preventDefault(); // prevent normal form submit
+
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const tableType = document.getElementById('tableType').value;
+      const message = document.getElementById("message");
+
+      if (!startDate || !endDate || !tableType) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      try {
+        message.innerText = 'PDF generation request sent. Please wait you will be redirect soon';
+        // Send generate request to backend
+        const response = await fetch('/user/pdf-generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ startDate, endDate, tableType })
+        });
+
+        // console.log(startDate, endDate, tableType);
+
+
+        if (!response.ok) throw new Error('Failed to generate PDF');
+
+        const messageDiv = document.getElementById('message');
+        let countdown = 10;
+
+        // Show initial message
+        messageDiv.innerText = `PDF generation started. Redirecting in ${countdown} seconds...`;
+
+        // Update countdown every second
+        const interval = setInterval(() => {
+          countdown--;
+          if (countdown > 0) {
+            messageDiv.innerText = `Redirecting in ${countdown} seconds...`;
+          } else {
+            clearInterval(interval);
+            window.location.href = '/user/statements';
+          }
+        }, 1000);
+
+      } catch (err) {
+        console.error(err);
+        alert('Something went wrong. Please try again.');
+      }
+    });
+  </script>
+
+  <script>
+    // Sample data for PDF generation
+
+
+    // Set default dates
+    document.addEventListener('DOMContentLoaded', function () {
+      const today = new Date();
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      document.getElementById('startDate').valueAsDate = firstDay;
+      document.getElementById('endDate').valueAsDate = today;
+    });
+  </script>
+  <%- include("./partials/sidebar_js") %>
+</body>
+
+</html>

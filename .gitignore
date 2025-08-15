@@ -1,0 +1,27 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Environment variables
+.env
+
+
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build directories (if any)
+dist/
+build/
+
+# VS Code settings
+.vscode/
+
+# PDF or uploads if you don't want to commit them
+public/pdfs/
+uploads/

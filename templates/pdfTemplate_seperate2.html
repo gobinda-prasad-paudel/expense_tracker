@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Expense Tracker Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      margin: 40px;
+    }
+
+    /* table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      height: auto;
+    } */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      /* Allows border-radius to work */
+      border-spacing: 0;
+      /* Removes gaps between borders */
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      height: auto;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      /* Optional: adds subtle shadow */
+    }
+
+    .income th,
+    td {
+      border: 1px solid #48de51d3;
+      padding: 8px;
+      text-align: left;
+
+    }
+
+    .income th {
+      background-color: #48ce51d3;
+      color: white;
+    }
+
+
+
+    .income tr:nth-child(even) {
+      background-color: #92c18871;
+    }
+
+    .expense th,
+    td {
+      border: 1px solid #bd9292;
+      padding: 8px;
+      text-align: left;
+
+    }
+
+    .expense th {
+      background-color: #d67979;
+      color: white;
+    }
+
+    .expense tr:nth-child(even) {
+      background-color: #f3f3f3;
+    }
+
+
+
+
+
+
+
+    .charts {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+
+    }
+
+    canvas {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-break {
+      page-break-before: always;
+      /* Force next element to a new page */
+      break-before: page;
+      /* Modern alternative */
+    }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 14px;
+      color: #666;
+      border-top: 1px solid #ccc;
+      background-color: #f8f9fa;
+      margin-top: 40px;
+
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Expense Tracker Report</h1>
+  <p><strong>User:</strong> {{username}}</p>
+  <p><strong>Generated Date:</strong> {{date}}</p>
+  <p><strong>Report ID:</strong> {{pdfId}}</p>
+  <p>Transactions from: {{startDate}}</p>
+  <p>Transactions to: {{endDate}}</p>
+
+  <h3>{{transactionSpan}}</h3>
+  <h2>Income Transactions</h2>
+  <table class="income">
+    <thead>
+      <tr>
+        <th>S.N</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Income Type</th>
+        <th>Amount</th>
+        <th>Transaction Via</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{incomeTransactions}}
+    </tbody>
+  </table>
+  {{message2}}
+  <h2>Expense Transactions</h2>
+  <table class="expense">
+    <thead>
+      <tr>
+        <th>S.N</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Expense Category</th>
+        <th>Amount Paid</th>
+        <th>Transaction Via</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{expenseTransactions}}
+    </tbody>
+  </table>
+  {{message3}}
+
+
+
+  <div class="charts">
+    <div>
+      <h3>Expenses by Category (Pie Chart)</h3>
+      <canvas id="pieChart" width="300" height="300"></canvas>
+    </div>
+    <div>
+      <h3>Expenses by Category (Bar Chart)</h3>
+      <canvas id="barChart" width="300" height="300"></canvas>
+    </div>
+  </div>
+
+  <footer> Expense Tracker &copy; {{currentDate}} </footer>
+
+  <script>
+    // Assuming you create charts like this:
+    const ctxPie = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(ctxPie, {
+      type: 'pie',
+      data: {{ chartData }},
+    options: { }
+  });
+
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(ctxBar, {
+      type: 'bar',
+      data: {{ chartData }},
+    options: { }
+  });
+
+    // After a short delay to ensure charts render, add the #chartsReady element
+    setTimeout(() => {
+      const readyDiv = document.createElement('div');
+      readyDiv.id = 'chartsReady';
+      readyDiv.style.display = 'none';
+      document.body.appendChild(readyDiv);
+    }, 500); // half a second delay (adjust if needed)
+  </script>
+
+</body>
+
+</html>

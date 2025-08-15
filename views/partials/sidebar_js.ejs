@@ -1,0 +1,17 @@
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('-translate-x-full');
+    sidebar.classList.toggle('translate-x-0');
+    sidebarOverlay.classList.toggle('hidden');
+    sidebarOverlay.classList.toggle('opacity-0');
+    sidebarOverlay.classList.toggle('opacity-50');
+    document.body.classList.toggle('overflow-hidden');
+  }
+
+  sidebarToggle.addEventListener('click', toggleSidebar);
+  sidebarOverlay.addEventListener('click', toggleSidebar);
+</script>
