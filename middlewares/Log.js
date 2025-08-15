@@ -2,7 +2,7 @@ import useragent from "useragent";
 import geoip from "geoip-lite";
 // ----------------- Helper Functions -----------------
 
-import { SystemLog, UserVisit } from "../models/log.js";
+import { SystemLog, UserVisit } from "../models/Log.js";
 
 export async function logUserVisit(req) {
   try {
