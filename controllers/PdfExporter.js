@@ -177,7 +177,8 @@ export const generateFullPDF = async (req, res) => {
 
     // 🧠 Launch Puppeteer
     const browser = await puppeteer.launch({
-      headless: true, // headless mode
+      headless: true,
+      executablePath: "/usr/bin/chromium-browser", // path to system Chromium
       ignoreDefaultArgs: ["--disable-extensions"],
       args: [
         "--no-sandbox",
