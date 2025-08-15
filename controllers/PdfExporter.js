@@ -176,8 +176,22 @@ export const generateFullPDF = async (req, res) => {
       .replace("{{transactions}}", transactionHTML);
 
     // 🧠 Launch Puppeteer
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({
+      headless: true, // headless mode
+      ignoreDefaultArgs: ["--disable-extensions"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--use-gl=egl", // correct syntax
+      ],
+      ignoreHTTPSErrors: true,
+    });
+
     const page = await browser.newPage();
+    // Set a user agent
+    await page.setUserAgent(
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+    );
     await page.setContent(html, { waitUntil: "networkidle0" });
 
     // Wait for chart to render
