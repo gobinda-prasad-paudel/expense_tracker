@@ -26,7 +26,7 @@ export const formatDate = (date, isFullFormat = true) => {
   const bsYear = bsDate.slice(0, 4);
 
   const bsMonthName = nepaliMonths[parseInt(bsDate.slice(5, 7)) - 1]; // Month is 1-based index
-  const bsDay = bsDate.slice(8, 10);
+  const bsDay = parseInt(bsDate.slice(8, 10)) - 1;
 
   // Format AD date to readable format (e.g. "28 October 2024")
   const adDateObj = new Date(date);
