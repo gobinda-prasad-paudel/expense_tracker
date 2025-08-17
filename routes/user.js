@@ -46,7 +46,7 @@ router.get("/dashboard", async (req, res) => {
       return discount;
     }, 0);
 
-    const formattedTransactions = formatTransactions(
+    const formattedTransactions = await formatTransactions(
       incomeEarnedByUser,
       expensesDoneByUser
     );
@@ -86,8 +86,11 @@ router.get("/add-expense", (req, res) => {
   res.render("add-expense");
 });
 
+// router.get("/pdf-export", async (req, res) => {
+//   res.render("pdf-export.ejs");
+// });
 router.get("/pdf-export", async (req, res) => {
-  res.render("pdf-export.ejs");
+  res.render("pdf-export_uc.ejs");
 });
 
 router.post("/pdf-generate/", generateFullPDF);

@@ -1,11 +1,34 @@
-import BikramSambat, { ADToBS, BSToAD } from "bikram-sambat-js";
+import { ADToBS } from "bikram-sambat-js";
+import axios from "axios";
 
-export const formatDate = (date, isFullFormat = true) => {
-  // Convert ISO string to YYYY-MM-DD format string
-  const adDate = new Date(date).toISOString().slice(0, 10); // e.g. "2025-08-04"
+export const formatDate = async (date, isFullFormat = true) => {
+  const adDateObj = new Date(date);
+  const adDay = adDateObj.getDate();
+  const adMonth = adDateObj.getMonth() + 1;
+  const adYear = adDateObj.getFullYear();
 
-  // Convert AD date to BS
-  const bsDate = ADToBS(adDate);
+  let bsDate;
+
+  try {
+    const apiUrl = `https://sudhang.pythonanywhere.com/ADtoBS/${adYear}/${adMonth}/${adDay}`;
+    const { data } = await axios.get(apiUrl);
+
+    if (!data.bs_date) throw new Error("No BS date found in API response");
+
+    const { year, month, day } = data.bs_date;
+    bsDate = { year, month, day };
+  } catch (err) {
+    // fallback to bikram-sambat-js
+    const adDateStr = adDateObj.toISOString().slice(0, 10);
+    const bsStr = ADToBS(adDateStr); // e.g. "2079-10-14"
+    const parts = bsStr.split("-");
+    bsDate = {
+      year: parseInt(parts[0]),
+      month: parseInt(parts[1]),
+      day: parseInt(parts[2]),
+    };
+    console.log("⚠️ Second (Fallback to bikram-sambat-js) due to ", err);
+  }
 
   // Map month number to Nepali month name
   const nepaliMonths = [
@@ -23,18 +46,13 @@ export const formatDate = (date, isFullFormat = true) => {
     "Chaitra",
   ];
 
-  const bsYear = bsDate.slice(0, 4);
+  const bsMonthName = nepaliMonths[bsDate.month - 1];
 
-  const bsMonthName = nepaliMonths[parseInt(bsDate.slice(5, 7)) - 1]; // Month is 1-based index
-  const bsDay = parseInt(bsDate.slice(8, 10)) - 1;
-
-  // Format AD date to readable format (e.g. "28 October 2024")
-  const adDateObj = new Date(date);
+  // Format AD date for display
   const options = { day: "numeric", month: "long", year: "numeric" };
   const formattedAdDate = adDateObj.toLocaleDateString("en-GB", options);
 
-  // Combine to required format
   return isFullFormat
-    ? `${bsDay} ${bsMonthName} ${bsYear} (${formattedAdDate})`
-    : `${bsDay} ${bsMonthName} ${bsYear} `;
+    ? `${bsDate.day} ${bsMonthName} ${bsDate.year} (${formattedAdDate})`
+    : `${bsDate.day} ${bsMonthName} ${bsDate.year}`;
 };
