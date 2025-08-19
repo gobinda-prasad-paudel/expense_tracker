@@ -11,12 +11,20 @@ const client = new IPLocate(process.env.NODE_IP_LOCATE_API_KEY);
 
 export async function logUserVisit(req) {
   try {
-    // Get client IP
     let ip =
       req.headers["x-forwarded-for"] ||
       req.connection.remoteAddress ||
       "0.0.0.0";
-    if (ip.startsWith("::ffff:")) ip = ip.replace("::ffff:", ""); // normalize IPv4-mapped IPv6
+
+    // Take only the first IP if there are multiple
+    if (ip.includes(",")) {
+      ip = ip.split(",")[0].trim();
+    }
+
+    // Normalize IPv6-mapped IPv4
+    if (ip.startsWith("::ffff:")) {
+      ip = ip.replace("::ffff:", "");
+    }
 
     const agent = useragent.parse(req.headers["user-agent"]);
 
