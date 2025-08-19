@@ -106,7 +106,7 @@ const client = new IPLocate(process.env.NODE_IP_LOCATE_API_KEY);
 function getClientIp(req) {
   const xForwardedFor = req.headers["x-forwarded-for"];
   let ip = xForwardedFor
-    ? xForwardedFor.split(",")[0]
+    ? xForwardedFor.split(",")[0].trim()
     : req.socket.remoteAddress;
 
   // Normalize IPv6-mapped IPv4 (::ffff:127.0.0.1)
@@ -123,7 +123,15 @@ app.get("/", async (req, res) => {
     const clientIp = getClientIp(req);
 
     // Lookup client IP using IPLocate
-    const geo = await client.lookup(clientIp);
+    let geo = {};
+    try {
+      geo = await client.lookup(clientIp);
+      console.log("Client IP:", clientIp);
+      console.log("Geo info:", geo);
+    } catch (err) {
+      console.error("IPLocate API error:", err.message);
+      geo = {}; // fallback if API fails
+    }
 
     res.json({
       ip: clientIp,
