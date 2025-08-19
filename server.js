@@ -3,6 +3,7 @@ import path from "path";
 import dotenv from "dotenv";
 dotenv.config(); // Loads .env variables
 import cookieParser from "cookie-parser";
+import ngrok from "ngrok";
 
 import { fileURLToPath } from "url";
 import connectToMongoDB from "./connect.js";
@@ -100,6 +101,22 @@ app.get("/logout", (req, res) => {
   return res.clearCookie("token").redirect("/");
 });
 
-app.listen(PORT, () => {
-  console.log(`app listening at port : ${PORT}`);
+// app.listen(PORT, ()=>{
+//   console.log(`Server is listening at : ${PORT}`)
+// })
+
+//test
+
+app.listen(PORT, async () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+
+  try {
+    const url = await ngrok.connect({
+      addr: PORT,
+      authtoken: process.env.NGROK_AUTHTOKEN, // optional
+    });
+    console.log(`🚀 Public URL via ngrok: ${url}`);
+  } catch (err) {
+    console.error("Failed to start ngrok:", err);
+  }
 });

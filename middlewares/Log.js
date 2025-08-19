@@ -11,19 +11,22 @@ const client = new IPLocate(process.env.NODE_IP_LOCATE_API_KEY);
 
 export async function logUserVisit(req) {
   try {
-    const ip =
+    // Get client IP
+    let ip =
       req.headers["x-forwarded-for"] ||
       req.connection.remoteAddress ||
       "0.0.0.0";
+    if (ip.startsWith("::ffff:")) ip = ip.replace("::ffff:", ""); // normalize IPv4-mapped IPv6
 
     const agent = useragent.parse(req.headers["user-agent"]);
 
-    let geo = null;
-
+    // Lookup geolocation
+    let geo = {};
     try {
       geo = await client.lookup(ip);
     } catch (apiErr) {
       console.error("IPLocate API error:", apiErr.message);
+      geo = {}; // fallback to empty object
     }
 
     const now = new Date();
@@ -31,7 +34,7 @@ export async function logUserVisit(req) {
     const time = now.toLocaleTimeString("en-US", { hour12: true });
 
     const visit = new UserVisitUpdated({
-      ip: ip,
+      ip,
       country: geo?.country || null,
       country_code: geo?.country_code || null,
       is_eu: geo?.is_eu ?? null,
@@ -60,7 +63,18 @@ export async function logUserVisit(req) {
     });
 
     await visit.save();
-    console.log("User visit saved ✅:", visit);
+    console.log(
+      "User visit saved ✅:",
+      "|",
+      "Country: ",
+      visit.country,
+      "|",
+      "City: ",
+      visit.city,
+      "|",
+      "Time zone: ",
+      visit.time_zone
+    );
   } catch (err) {
     console.error("Error logging user visit:", err);
   }
