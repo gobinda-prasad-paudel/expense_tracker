@@ -97,7 +97,7 @@ router.post("/pdf-generate/", generateFullPDF);
 
 router.get("/statements", async (req, res) => {
   const userId = req.user._id;
-  const fullName = "testUser";
+  const fullName = req.user.fullName || "test user";
   const rawStatementsList = await Statements.find({ userId: userId });
   const modifiedStatementsList = rawStatementsList.map((item) => {
     // Format time in 12-hour format
@@ -113,6 +113,8 @@ router.get("/statements", async (req, res) => {
       time, // Add the formatted time
     };
   });
+
+  // console.log("Modified statement List", modifiedStatementsList);
 
   res.render("statements.ejs", {
     statementList: modifiedStatementsList,

@@ -6,7 +6,7 @@ const saltRound = 10;
 
 // ========== SIGNUP ==========
 export const handleCreateNewUser = async (req, res) => {
-  console.log("Signup Request:", req.body);
+  console.log("Signup Request:");
   const { fullName, email, password, role } = req.body;
 
   try {
@@ -17,8 +17,6 @@ export const handleCreateNewUser = async (req, res) => {
       console.log("Account with the same email already exists");
       return res.redirect("/login");
     }
-
-    console.log("Not called");
 
     const hashedPassword = await bcrypt.hash(password, saltRound);
 
@@ -56,7 +54,7 @@ export const handleUserLogin = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, loginUser.password);
-    console.log(`Password match: ${isMatch}`);
+    console.log(`Password match: ${isMatch ? "Match" : "Not matched"}`);
 
     if (!isMatch) {
       req.cookie("message", "Invalid email or password");

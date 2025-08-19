@@ -30,6 +30,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
     "multer": "^2.0.2",
+    "node-iplocate": "^2.0.1",
     "pdf-lib": "^1.17.1",
     "puppeteer": "^24.16.0",
     "useragent": "^2.3.0",

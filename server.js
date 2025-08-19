@@ -66,7 +66,7 @@ app.get("/", async (req, res) => {
 app.get("/login", (req, res) => {
   const message = req.cookies["message"] || "";
   const success = req.cookies["success"] || false;
-  console.log(`From server.js message, success : ${(message, success)}`);
+  // console.log(`From server.js message, success : ${(message, success)}`);
   const user = req?.user;
 
   // Clear the flash message cookie

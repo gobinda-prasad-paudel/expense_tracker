@@ -57,14 +57,14 @@ export const generateFullPDF = async (req, res) => {
     });
 
     // 🔄 Format all transactions
-    const formattedTransactions = formatTransactions(
+    const formattedTransactions = await formatTransactions(
       incomeEarnedByUser,
       expensesDoneByUser
     );
-    console.log("Formatted transactions", formattedTransactions),
-      console.log("Income transactions", incomeEarnedByUser);
+    // console.log("Formatted transactions", formattedTransactions);
+    // console.log("Income transactions", incomeEarnedByUser);
 
-    console.log("Exported transactions", expensesDoneByUser);
+    // console.log("Exported transactions", expensesDoneByUser);
 
     // 🧾 Generate transaction table HTML
     const transactionHTML = formattedTransactions
@@ -178,7 +178,7 @@ export const generateFullPDF = async (req, res) => {
     // 🧠 Launch Puppeteer
     const browser = await puppeteer.launch({
       headless: true,
-      
+
       ignoreDefaultArgs: ["--disable-extensions"],
       args: [
         "--no-sandbox",
@@ -208,7 +208,10 @@ export const generateFullPDF = async (req, res) => {
     await browser.close();
 
     await Statements.create({
-      duration: `${formatDate(startDate, false)}-${formatDate(endDate, false)}`,
+      duration: `${await formatDate(startDate, false)} - ${await formatDate(
+        endDate,
+        false
+      )}`,
       linkOfPdf: `/${userId}/${pdfId}.pdf`,
       userId: userId,
     });
