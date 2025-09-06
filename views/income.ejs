@@ -29,7 +29,7 @@
           </button>
           <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Income</h1>
           <div class="flex-grow"></div>
-          <a href="/user/dashboard" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+          <a href="/user/dashboard" class="text-gray-600 hover:text-gray-900 text-sm sm:text-xl">
             <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
           </a>
         </header>
@@ -64,8 +64,8 @@
                             <%= income.description %>
                           </h3>
                           <p class="text-sm text-gray-500">
-                            <%= income.date %>
-                              <!-- Salary • 1 Kartik 2081 (14 October 2024) -->
+                            <%= income.receivedThrough %> • <%= new Date(income.date).toLocaleDateString() %>
+                                <!-- Salary • 1 Kartik 2081 (14 October 2024) -->
                           </p>
                         </div>
                         <div class="flex items-center space-x-4">

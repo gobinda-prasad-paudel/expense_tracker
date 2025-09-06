@@ -110,13 +110,17 @@ app.get("/logout", (req, res) => {
 app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);
 
-  try {
-    const url = await ngrok.connect({
-      addr: PORT,
-      authtoken: process.env.NGROK_AUTHTOKEN, // optional
-    });
-    console.log(`🚀 Public URL via ngrok: ${url}`);
-  } catch (err) {
-    console.error("Failed to start ngrok:", err);
+  // replace your ngrok block with this:
+  if (process.env.NODE_ENV !== "production") {
+    const ngrok = await import("ngrok");
+    try {
+      const url = await ngrok.connect({
+        addr: PORT,
+        authtoken: process.env.NGROK_AUTHTOKEN,
+      });
+      console.log(`🚀 Public URL via ngrok: ${url}`);
+    } catch (err) {
+      console.error("Failed to start ngrok:", err);
+    }
   }
 });

@@ -27,7 +27,7 @@
           </button>
           <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Dashboard</h1>
           <div class="flex-grow"></div>
-          <a href="/user/statements" class="text-gray-600 hover:text-gray-900 text-sm sm:text-2xl">
+          <a href="/user/statements" class="text-gray-600 hover:text-gray-900 text-sm sm:text-xl">
             <i class="fas fa-arrow-left mr-2"></i>Go To statement
           </a>
         </header>
@@ -191,17 +191,18 @@
                           <p class="text-sm text-gray-500">
                             <%= transaction.category %> • <%= transaction.date %>
                           </p>
-                          <p class="text-xs text-blue-600">Original: रु‎ 2,500
+                          <p class="text-xs text-blue-600">
                             <% if (transaction.transactionType==="expense" && transaction.isDiscountAvailable) { %>
 
-                              | Discount: <% if (transaction.discount.type==="fixed" ) { %>
-                                रु‎ <%= transaction.discountAmount %>
+                              Original: रु‎ <%= transaction.amount %> | Discount: <% if
+                                  (transaction.discount.type==="fixed" ) { %>
+                                  रु‎ <%= transaction.discountAmount %>
 
-                                  <% } else{ %>
-                                    <%= transaction.discountAmount %> %
+                                    <% } else{ %>
+                                      <%= transaction.discountAmount %> %
 
 
-                                      <% } %>
+                                        <% } %>
 
 
 
@@ -230,7 +231,7 @@
                                 <p class="text-xs text-gray-500 line-through">रु‎
 
 
-                                  <%= transaction.discountAmount %>
+                                  <%= transaction.amount %>
 
 
                                 </p>

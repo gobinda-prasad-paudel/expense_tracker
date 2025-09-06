@@ -57,6 +57,8 @@ router.get("/dashboard", async (req, res) => {
     const expenseTransactions = expensesDoneByUser.length;
     const totalTransactions = incomeTransactions + expenseTransactions;
 
+    console.log(formattedTransactions);
+
     res.render("dashboard", {
       incomes: incomeEarnedByUser,
       expenses: expensesDoneByUser, // renamed to plural for clarity
@@ -86,12 +88,12 @@ router.get("/add-expense", (req, res) => {
   res.render("add-expense");
 });
 
-// router.get("/pdf-export", async (req, res) => {
-//   res.render("pdf-export.ejs");
-// });
 router.get("/pdf-export", async (req, res) => {
-  res.render("pdf-export_uc.ejs");
+  res.render("pdf-export.ejs");
 });
+// router.get("/pdf-export", async (req, res) => {
+//   res.render("pdf-export_uc.ejs");
+// });
 
 router.post("/pdf-generate/", generateFullPDF);
 
@@ -141,6 +143,8 @@ router.get("/income", async (req, res) => {
       .skip(0)
       .limit(10);
 
+    console.log(incomeDoneByUser);
+
     res.render("income", {
       incomeDoneByUser,
     });
@@ -158,9 +162,12 @@ router.get("/expense", async (req, res) => {
       userId: userId,
       isDeleted: false,
     })
+
       .sort({ date: -1 })
       .skip(0)
       .limit(10);
+
+    // console.log(expensesDoneByUser);
 
     res.render("expense", {
       expensesDoneByUser,
