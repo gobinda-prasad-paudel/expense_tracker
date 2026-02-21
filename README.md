@@ -22,7 +22,7 @@ This project helps users keep track of daily expenses, manage categories, and vi
 ## 🛠️ Tech Stack
 - **Frontend:** React (Vite/CRA) + TypeScript  
 - **Backend:** Node.js + Express  
-- **Database:** (choose your DB, e.g., MongoDB / PostgreSQL / SQLite)  
+- **Database:**  MongoDB .
 - **Deployment:** Azure App Service  
 - **Version Control:** Git + GitHub  
 
